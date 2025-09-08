@@ -99,7 +99,6 @@ async function loadPlantsByCategory(id){
 }
 
 
-
 function renderCard(plant) {
   const id = plant.id || Math.random();
   const name = plant.name || 'Unnamed';
@@ -109,18 +108,18 @@ function renderCard(plant) {
   const price = Number(plant.price ?? 10);
 
   const card = document.createElement('div');
-  card.className = 'card bg-base-100 shadow-xl plant-card';
+  card.className = 'card bg-white plant-card';
   card.innerHTML = `
     <figure class="aspect-[4/3] overflow-hidden"><img src="${img}" alt="${name}" class="w-full h-full object-cover"/></figure>
     <div class="card-body">
       <h3 class="card-title text-xl plant-name">${name}</h3>
       <p class="line-clamp-2">${desc}</p>
       <div class="flex items-center justify-between mt-2">
-        <span class="badge badge-outline">${category}</span>
+        <span class="bg-[#DCFCE7] text-[#15803D] p-1 px-3 rounded-full">${category}</span>
         <span class="font-semibold">${fmt.format(price)}</span>
       </div>
       <div class="card-actions justify-end mt-3">
-        <button class="btn btn-sm btn-primary add-cart">Add to Cart</button>
+        <button class="btn btn-neutral add-cart w-full bg-[#15803D] text-[#EDEDED] border-none rounded-full">Add to Cart</button>
       </div>
     </div>`;
 
@@ -146,24 +145,46 @@ async function openDetail(id, fallback) {
   els.modal.showModal();
 }
 
-function renderCart(){
-  els.cartList.innerHTML=''; let total=0;
-  cart.forEach(item=>{
-    total+=item.price;
-    const li=document.createElement('li'); li.className='flex items-center justify-between gap-2 bg-base-100 rounded-lg p-2';
-    li.innerHTML=`<span class="truncate">${item.name}</span>
+
+function renderCart() {
+  els.cartList.innerHTML = '';
+  let total = 0;
+
+  cart.forEach(item => {
+    total += item.price * item.qty;
+    const li = document.createElement('li');
+    li.className = 'flex items-center justify-between gap-2 bg-base-100 rounded-lg p-2';
+
+    li.innerHTML = `
+      <span class="truncate">${item.name}  × ${item.qty}</span>
       <div class="flex items-center gap-3">
-        <span class="font-semibold">${fmt.format(item.price)}</span>
-        <button class="btn btn-xs btn-error text-white" aria-label="Remove">❌</button>
-      </div>`;
-    li.querySelector('button').addEventListener('click',()=>{ const idx=cart.findIndex(x=>x._uid===item._uid); if(idx>-1){ cart.splice(idx,1); renderCart(); }});
+        <span class="font-semibold">${fmt.format(item.price * item.qty)}</span>
+        <button class="btn btn-xs bg-[red] text-white" aria-label="Remove">×</button>
+      </div>
+    `;
+
+    li.querySelector('button').addEventListener('click', () => {
+      const idx = cart.findIndex(x => x.id === item.id);
+      if (idx > -1) {
+        cart.splice(idx, 1);
+        renderCart();
+      }
+    });
+
     els.cartList.appendChild(li);
   });
-  els.cartTotal.textContent=fmt.format(total);
+
+  els.cartTotal.textContent = fmt.format(total);
 }
 
-function addToCart({id,name,price}){
-  cart.push({_uid:crypto.randomUUID(),id,name,price:Number(price)||0}); renderCart();
-}
 
+function addToCart({id, name, price}) {
+  const existing = cart.find(item => item.id === id);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({ id, name, price: Number(price) || 0, qty: 1 });
+  }
+  renderCart();
+}
 (function init(){ els.year.textContent=new Date().getFullYear(); loadCategories(); })();
