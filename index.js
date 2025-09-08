@@ -45,14 +45,21 @@ async function fetchJSON(url){
   finally{ setLoading(false); }
 }
 
-async function loadCategories(){
+async function loadCategories() {
   const data = await fetchJSON(API.categories);
   if(!data) return;
-
   const items = data.categories || data.data || data || [];
-
   els.categories.innerHTML = '';
-
+  const allBtn = document.createElement('button');
+  allBtn.className = 'btn btn-sm justify-start';
+  allBtn.textContent = 'All Trees';
+  allBtn.dataset.id = 'all';
+  allBtn.addEventListener('click', () => {
+    activeCategoryId = 'all';
+    setActiveButton('all');
+    loadAllTrees();
+  });
+  els.categories.appendChild(allBtn);
   const categoryNames = {
     1: "Fruits Trees",
     2: "Flowering Trees",
@@ -69,12 +76,10 @@ async function loadCategories(){
   items.forEach((cat, idx) => {
     const id = cat.id || cat.category_id || idx;
     const name = categoryNames[id] || cat.name || cat.category || `Category ${idx+1}`;
-
     const btn = document.createElement('button');
-    btn.className = 'btn btn-sm btn-ghost justify-start';
-    btn.textContent = name; 
+    btn.className = 'btn btn-sm justify-start';
+    btn.textContent = name;
     btn.dataset.id = id;
-
     btn.addEventListener('click', () => {
       activeCategoryId = id;
       setActiveButton(id);
@@ -83,10 +88,34 @@ async function loadCategories(){
 
     els.categories.appendChild(btn);
   });
-
   const first = els.categories.querySelector('button');
   if(first) first.click();
 }
+
+function setActiveButton(id) {
+  [...els.categories.querySelectorAll('button')].forEach(btn => {
+    if (btn.dataset.id === String(id)) {
+      // Active button
+      btn.classList.add('bg-[#15803D]','rounded-lg', 'text-white');  // background + text color
+      btn.classList.remove('btn-soft');
+    } else {
+      // Inactive buttons
+      btn.classList.remove('bg-[#15803D]', 'rounded-lg','text-white');
+      btn.classList.add('btn-soft');
+    }
+  });
+}
+
+
+async function loadAllTrees() {
+  els.grid.innerHTML=''; els.empty.classList.add('hidden');
+  const data = await fetchJSON(API.plants);
+  if(!data){ els.empty.classList.remove('hidden'); return; }
+  const list = data.plants || data.data || [];
+  if(!list.length){ els.empty.classList.remove('hidden'); return; }
+  list.forEach(renderCard);
+}
+
 
 
 async function loadPlantsByCategory(id){
@@ -113,13 +142,13 @@ function renderCard(plant) {
     <figure class="aspect-[4/3] overflow-hidden"><img src="${img}" alt="${name}" class="w-full h-full object-cover"/></figure>
     <div class="card-body">
       <h3 class="card-title text-xl plant-name">${name}</h3>
-      <p class="line-clamp-2">${desc}</p>
+      <p class="text-[#1F2937]">${desc}</p>
       <div class="flex items-center justify-between mt-2">
         <span class="bg-[#DCFCE7] text-[#15803D] p-1 px-3 rounded-full">${category}</span>
         <span class="font-semibold">${fmt.format(price)}</span>
       </div>
       <div class="card-actions justify-end mt-3">
-        <button class="btn btn-neutral add-cart w-full bg-[#15803D] text-[#EDEDED] border-none rounded-full">Add to Cart</button>
+        <button class="btn btn-sm btn-neutral add-cart w-full bg-[#15803D] text-white border-none rounded-full">Add to Cart</button>
       </div>
     </div>`;
 
