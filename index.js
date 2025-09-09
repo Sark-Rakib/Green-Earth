@@ -1,3 +1,5 @@
+// add api
+
 const API = {
   plants: 'https://openapi.programming-hero.com/api/plants',
   categories: 'https://openapi.programming-hero.com/api/categories',
@@ -44,6 +46,8 @@ async function fetchJSON(url){
   }catch(err){ console.error(err); return null; }
   finally{ setLoading(false); }
 }
+
+// category
 
 async function loadCategories() {
   const data = await fetchJSON(API.categories);
@@ -95,11 +99,9 @@ async function loadCategories() {
 function setActiveButton(id) {
   [...els.categories.querySelectorAll('button')].forEach(btn => {
     if (btn.dataset.id === String(id)) {
-      // Active button
       btn.classList.add('bg-[#15803D]','rounded-lg', 'text-white');  // background + text color
       btn.classList.remove('btn-soft');
     } else {
-      // Inactive buttons
       btn.classList.remove('bg-[#15803D]', 'rounded-lg','text-white');
       btn.classList.add('btn-soft');
     }
@@ -116,8 +118,6 @@ async function loadAllTrees() {
   list.forEach(renderCard);
 }
 
-
-
 async function loadPlantsByCategory(id){
   els.grid.innerHTML=''; els.empty.classList.add('hidden');
   const data = await fetchJSON(API.category(id));
@@ -127,6 +127,7 @@ async function loadPlantsByCategory(id){
   list.forEach(renderCard);
 }
 
+// card
 
 function renderCard(plant) {
   const id = plant.id || Math.random();
@@ -157,6 +158,7 @@ function renderCard(plant) {
   els.grid.appendChild(card);
 }
 
+// open modal detail
 
 async function openDetail(id, fallback) {
   const { name, img, desc, category, price } = fallback;
@@ -206,6 +208,7 @@ function renderCart() {
   els.cartTotal.textContent = fmt.format(total);
 }
 
+// add cart
 
 function addToCart({id, name, price}) {
   const existing = cart.find(item => item.id === id);
