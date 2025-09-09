@@ -28,9 +28,7 @@
       .banner-bg {
         background-size: 100px;
       }
-      .img{
-        display: none !important;
-      }
+      
     }
   </style>
 </head>
@@ -38,16 +36,39 @@
 
 <!-- Navbar -->
 <header class="bg-[#14532D] text-white">
-    <div class="max-w-[1320px] mx-auto flex justify-between items-center p-4">
-      <h1 class="flex items-center gap-1 text-2xl font-bold"><img class="img" src="./assets/plant-png.png">Green Earth</h1>
-      <nav class="space-x-6  md:block">
-        <a href="#about" class="hover:text-green-200">About</a>
-        <a href="#" class="hover:text-green-200">Gallery</a>
-        <a href="#plant-form" class="hover:text-green-200">Plant a Tree</a>
-      </nav>
-      <a href="#plant-form" class="btn btn-neutral bg-[#FACC15] text-[#15803D] border-none rounded-full font-semibold">Plant a Tree</a>
+  <div class="max-w-[1320px] mx-auto flex justify-between items-center p-4">
+    <h1 class="flex items-center gap-1 text-2xl font-bold">
+      <img class="img" src="./assets/plant-png.png">Green Earth
+    </h1>
+    <nav class="hidden md:flex flex-1 justify-center space-x-6">
+      <a href="#about" class="hover:text-green-200">About</a>
+      <a href="#" class="hover:text-green-200">Gallery</a>
+      <a href="#plant-form" class="hover:text-green-200">Plant a Tree</a>
+    </nav>
+    <div class="hidden md:block flex-shrink-0">
+      <a href="#plant-form"
+         class="btn btn-neutral bg-[#FACC15] text-[#15803D] border-none rounded-full font-semibold">
+        Plant a Tree
+      </a>
     </div>
-  </header>
+
+    <!-- Hamburger (mobile only) -->
+    <button id="menu-btn" class="md:hidden focus:outline-none">
+      <i class="fa-solid fa-bars text-2xl"></i>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden md:hidden bg-[#166534]">
+    <ul class="flex flex-col items-center space-y-4 py-4">
+      <li><a href="#about" class="hover:text-green-200">About</a></li>
+      <li><a href="#" class="hover:text-green-200">Gallery</a></li>
+      <li><a href="#plant-form" class="hover:text-green-200">Plant a Tree</a></li>
+      <li>
+        <a href="#plant-form" class="btn btn-neutral bg-[#FACC15] text-[#15803D] border-none rounded-full font-semibold">Plant a Tree</a>
+      </li>
+    </ul>
+  </div>
+</header>
 
 <!-- Banner -->
 <section id="home" class="banner-bg">
