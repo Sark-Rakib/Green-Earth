@@ -99,7 +99,7 @@ async function loadCategories() {
 function setActiveButton(id) {
   [...els.categories.querySelectorAll('button')].forEach(btn => {
     if (btn.dataset.id === String(id)) {
-      btn.classList.add('bg-[#15803D]','rounded-lg', 'text-white');  // background + text color
+      btn.classList.add('bg-[#15803D]','rounded-lg', 'text-white');  
       btn.classList.remove('btn-soft');
     } else {
       btn.classList.remove('bg-[#15803D]', 'rounded-lg','text-white');
@@ -133,7 +133,7 @@ function renderCard(plant) {
   const id = plant.id || Math.random();
   const name = plant.name || 'Unnamed';
   const img = plant.image || 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=2069&auto=format&fit=crop';
-  const desc = plant.short_description || plant.description || 'No description available';
+  const desc = plant.short_description || plant.description;
   const category = plant.category || 'General';
   const price = Number(plant.price ?? 10);
 
